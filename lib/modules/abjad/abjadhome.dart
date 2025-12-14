@@ -1,23 +1,223 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive/hive.dart';
+import 'package:foni_jomeja/core/audio/tap_sound.dart';
 
-class AbjadHome extends StatelessWidget {
-  const AbjadHome({super.key});
+class AbjadHomePage extends StatelessWidget {
+  const AbjadHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final int stars = Hive.box('scores').get('stars', defaultValue: 0);
+
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: Text(
-          "Halaman Abjad",
-          style: GoogleFonts.baloo2(
-            fontSize: 34,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF6B3A00),
+      body: Stack(
+        children: [
+          // 🌿 Background
+          Positioned.fill(
+            child: Image.asset(
+              "assets/images/bg/bg3.png",
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
+
+          SafeArea(
+            child: Column(
+              children: [
+                // 🔝 TOP BAR
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Row(
+                    children: [
+                      // ⬅ Back
+                      GestureDetector(
+                        onTap: () {
+                          TapSound.play();
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          width: 46,
+                          height: 46,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(18),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black26,
+                                offset: Offset(2, 3),
+                                blurRadius: 6,
+                              ),
+                            ],
+                          ),
+                          child: const Icon(Icons.arrow_back, color: Colors.brown),
+                        ),
+                      ),
+
+                      const Spacer(),
+
+                      // ⭐ Star counter
+                      Container(
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [
+                              Color(0xFFFFE37A),
+                              Color(0xFFFFC27A),
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(26),
+                        ),
+                        padding: const EdgeInsets.all(3),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFFF5D7),
+                            borderRadius: BorderRadius.circular(22),
+                          ),
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                "assets/images/home/star.png",
+                                height: 24,
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                "$stars",
+                                style: GoogleFonts.baloo2(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.brown,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 12),
+
+                // 🅰️ TITLE
+                Text(
+                  "Abjad",
+                  style: GoogleFonts.baloo2(
+                    fontSize: 36,
+                    fontWeight: FontWeight.w800,
+                    color: const Color(0xFF6B3A00),
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                // 🔤 ALPHABET GRID
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 14),
+                    child: GridView.builder(
+                      physics: const BouncingScrollPhysics(),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 4,
+                        mainAxisSpacing: 14,
+                        crossAxisSpacing: 14,
+                        childAspectRatio: 1,
+                      ),
+                      itemCount: 26,
+                      itemBuilder: (context, index) {
+                        final letter = String.fromCharCode(65 + index);
+                        return _AbjadTile(letter: letter);
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
+    );
+  }
+}
+
+// 🍡 SINGLE JELLY LETTER TILE
+class _AbjadTile extends StatefulWidget {
+  final String letter;
+
+  const _AbjadTile({required this.letter});
+
+  @override
+  State<_AbjadTile> createState() => _AbjadTileState();
+}
+
+class _AbjadTileState extends State<_AbjadTile>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scale;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 180),
+    );
+    _scale = Tween(begin: 1.0, end: 0.92).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  Future<void> _onTap() async {
+    TapSound.play();
+    await _controller.forward();
+    _controller.reverse();
+
+    // 🔜 later: Navigator.push to tracing page
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (_, __) {
+        return Transform.scale(
+          scale: _scale.value,
+          child: GestureDetector(
+            onTap: _onTap,
+            child: Container(
+              decoration: BoxDecoration(
+                color: const Color(0xFFBEEBFF),
+                borderRadius: BorderRadius.circular(22),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0xFF9ED8F3),
+                    offset: Offset(4, 4),
+                    blurRadius: 10,
+                  ),
+                  BoxShadow(
+                    color: Colors.white70,
+                    offset: Offset(-4, -4),
+                    blurRadius: 8,
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Image.asset(
+                  "assets/images/clayabjad/${widget.letter}.png",
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

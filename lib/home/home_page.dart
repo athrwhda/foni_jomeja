@@ -98,6 +98,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     super.dispose();
   }
 
+  @override
+void didChangeDependencies() {
+  super.didChangeDependencies();
+  setState(() {}); // force refresh when coming back
+}
+
+
   Widget _wrapButton({required int index, required MenuButton button}) {
     return AnimatedBuilder(
       animation: _staggerController,
@@ -179,7 +186,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   top: 6,
                   right: 18,
                   child: GestureDetector(
-                    onTap: () => Navigator.pushNamed(context, "/profiles"),
+                    onTap: () {
+                        TapSound.play(); // 🔊 ball_tap.wav
+                        Navigator.pushNamed(context, "/parentGate");
+                      },
                     child: Container(
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(

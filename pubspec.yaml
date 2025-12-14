@@ -71,6 +71,7 @@ flutter:
   assets:
     - assets/images/
     - assets/images/charbody/
+    - assets/images/clayabjad/
     - assets/images/home/
     - assets/images/bg/
     - assets/video/

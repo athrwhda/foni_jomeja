@@ -14,6 +14,9 @@ import 'profile_setup/avatar.dart';
 
 // Home
 import 'home/home_page.dart';
+import 'home/profile_page.dart';
+import 'home/parent_gate.dart';
+
 
 // Modules
 import 'modules/abjad/abjadhome.dart';
@@ -61,9 +64,12 @@ class MyApp extends StatelessWidget {
 
         // Home
         '/home': (_) => const HomePage(),
+        '/parentGate': (_) => const ParentGatePage(),
+        '/profiles': (_) => const ProfilePage(),
+
 
         // Modules
-        "/abjad": (context) => const AbjadHome(),
+        "/abjad": (context) => const AbjadHomePage(),
         "/kenali": (context) => const KenaliHome(),
         "/suku": (context) => const SukuHome(),
         "/main": (context) => const GameHome(),
