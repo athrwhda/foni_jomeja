@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:foni_jomeja/modules/abjad/letter/introduce_letter_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:foni_jomeja/core/audio/tap_sound.dart';
+import 'widgets/abjad_tile.dart';
 
 class AbjadHomePage extends StatelessWidget {
   const AbjadHomePage({super.key});
 
+
   @override
   Widget build(BuildContext context) {
     final int stars = Hive.box('scores').get('stars', defaultValue: 0);
+    final int unlockedIndex = 0; //A only test dulu
+        //Hive.box('progress').get('abjad_letters_unlocked', defaultValue: 0);
+
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -22,6 +28,7 @@ class AbjadHomePage extends StatelessWidget {
             ),
           ),
 
+
           SafeArea(
             child: Column(
               children: [
@@ -30,6 +37,7 @@ Padding(
   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
   child: Row(
     children: [
+
 
       // ⬅️ BACK BUTTON (IMAGE)
       GestureDetector(
@@ -43,7 +51,9 @@ Padding(
         ),
       ),
 
+
       const Spacer(),
+
 
       // ⭐ STAR CONTAINER (SAME AS HOME, BUT RIGHT)
       Stack(
@@ -53,6 +63,7 @@ Padding(
             "assets/images/button/star_container.png",
             height: 56,
           ),
+
 
           Positioned(
             right: 43,
@@ -73,7 +84,10 @@ Padding(
 ),
 
 
+
+
                 const SizedBox(height: 12),
+
 
                 // 🅰️ TITLE
                 Text(
@@ -85,7 +99,9 @@ Padding(
                   ),
                 ),
 
+
                 const SizedBox(height: 16),
+
 
                 // 🔤 ALPHABET GRID
                 Expanded(
@@ -102,7 +118,19 @@ Padding(
                       itemCount: 26,
                       itemBuilder: (context, index) {
                         final letter = String.fromCharCode(65 + index);
-                        return _AbjadTile(letter: letter);
+                        return AbjadTile(
+                          letter: letter,
+                          isUnlocked: index <= unlockedIndex,
+                          onTap: () {
+                              // 🚧 later: go to A page
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => IntroduceLetterPage(letter: letter),
+                                ),
+                              );
+                          },
+                        );
                       },
                     ),
                   ),
@@ -116,20 +144,25 @@ Padding(
   }
 }
 
+
 // 🍡 SINGLE JELLY LETTER TILE
 class _AbjadTile extends StatefulWidget {
   final String letter;
 
+
   const _AbjadTile({required this.letter});
+
 
   @override
   State<_AbjadTile> createState() => _AbjadTileState();
 }
 
+
 class _AbjadTileState extends State<_AbjadTile>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scale;
+
 
   @override
   void initState() {
@@ -143,19 +176,23 @@ class _AbjadTileState extends State<_AbjadTile>
     );
   }
 
+
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
 
+
   Future<void> _onTap() async {
     TapSound.play();
     await _controller.forward();
     _controller.reverse();
 
+
     // 🔜 later: Navigator.push to tracing page
   }
+
 
   @override
   Widget build(BuildContext context) {
