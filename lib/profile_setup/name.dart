@@ -4,6 +4,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:foni_jomeja/core/audio/tap_sound.dart';
 import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
+//import 'package:foni_jomeja/core/audio/bg_music.dart';
 
 class NameScreen extends StatefulWidget {
   const NameScreen({super.key});
@@ -49,6 +50,7 @@ class _NameScreenState extends State<NameScreen>
   @override
   void initState() {
     super.initState();
+    //BgMusic.start();
 
     /// 🔊 Play narrator voice line
     _voicePlayer.play(

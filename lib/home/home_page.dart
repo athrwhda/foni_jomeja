@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:foni_jomeja/core/audio/tap_sound.dart';
+import 'package:foni_jomeja/core/audio/bg_music.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -29,11 +31,22 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+    BgMusic.start();
+  });
 
-    Future.delayed(const Duration(milliseconds: 300), () {
-      _voicePlayer.play(AssetSource("audio/A.mp3"));
-    });
-
+    Future.delayed(const Duration(milliseconds: 300), () async {
+await _voicePlayer.setPlayerMode(PlayerMode.lowLatency);
+await _voicePlayer.setReleaseMode(ReleaseMode.stop);
+await _voicePlayer.setVolume(1.0);
+await _voicePlayer.play(
+AssetSource("audio/A.mp3"),
+mode: PlayerMode.lowLatency,
+);
+BgMusic.start();
+});
+    
     _titleController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 700),
@@ -99,11 +112,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   @override
-void didChangeDependencies() {
-  super.didChangeDependencies();
-  setState(() {}); // force refresh when coming back
-}
-
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    setState(() {});
+  }
 
   Widget _wrapButton({required int index, required MenuButton button}) {
     return AnimatedBuilder(
@@ -125,7 +137,8 @@ void didChangeDependencies() {
   Widget build(BuildContext context) {
     final w = MediaQuery.of(context).size.width;
 
-    String avatarName = Hive.box('child').get("avatar", defaultValue: "char1");
+    String avatarName =
+        Hive.box('child').get("avatar", defaultValue: "char1");
     int stars = Hive.box('scores').get("stars", defaultValue: 0);
 
     String avatarImage = "assets/images/charbody/$avatarName.png";
@@ -135,88 +148,105 @@ void didChangeDependencies() {
       body: Stack(
         children: [
           Positioned.fill(
-            child: Image.asset("assets/images/bg/bg3.png", fit: BoxFit.cover),
+            child: Image.asset(
+              "assets/images/bg/bg3.png",
+              fit: BoxFit.cover,
+            ),
           ),
 
           SafeArea(
             child: Stack(
               children: [
-                // 🌟 STAR COUNTER WITH GRADIENT BORDER
+
+                // ⭐ STAR CONTAINER (IMAGE)
                 Positioned(
                   top: 10,
-                  left: 18,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [
-                          Color(0xFFFFE37A),
-                          Color(0xFFFFC27A),
-                          Color(0xFFFFA85A),
-                        ],
+                  left: 16,
+                  child: Stack(
+                    alignment: Alignment.centerLeft,
+                    children: [
+                      Image.asset(
+                        "assets/images/button/star_container.png",
+                        height: 56,
                       ),
-                      borderRadius: BorderRadius.circular(26),
-                    ),
-                    padding: const EdgeInsets.all(3),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFFFF5D7),
-                        borderRadius: BorderRadius.circular(22),
-                      ),
-                      child: Row(
-                        children: [
-                          Image.asset("assets/images/home/star.png", height: 32),
-                          const SizedBox(width: 8),
-                          Text(
-                            "$stars",
-                            style: GoogleFonts.baloo2(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.brown,
-                            ),
+
+                      // STAR COUNT
+                      Positioned(
+                        right: 43,
+                        top: 8,
+                        child: Text(
+                          "$stars",
+                          style: GoogleFonts.baloo2(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
                           ),
-                        ],
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
 
-                // 🌈 AVATAR WITH RAINBOW BORDER
-                Positioned(
-                  top: 6,
-                  right: 18,
-                  child: GestureDetector(
-                    onTap: () {
-                        TapSound.play(); // 🔊 ball_tap.wav
-                        Navigator.pushNamed(context, "/parentGate");
-                      },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [
-                            Colors.pink,
-                            Colors.orange,
-                            Colors.yellow,
-                            Colors.green,
-                            Colors.blue,
-                            Colors.purple,
-                          ],
-                        ),
-                        shape: BoxShape.circle,
-                      ),
-                      padding: const EdgeInsets.all(3),
-                      child: CircleAvatar(
-                        radius: 36,
-                        backgroundColor: const Color(0xFFFFF5D7),
-                        child: ClipOval(
-                          child: Image.asset(avatarImage, width: 72, height: 72),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                // 🔊 SOUND BUTTON + 👤 PROFILE (profile unchanged)
+Positioned(
+  top: 6,
+  right: 16,
+  child: Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
 
-                // FONI breathing
+      // 🔊 SOUND TOGGLE
+      GestureDetector(
+        onTap: () async {
+          TapSound.play();
+
+          if (BgMusic.isMuted) {
+            await BgMusic.unmute();
+          } else {
+            await BgMusic.mute();
+          }
+
+          setState(() {});
+        },
+        child: Image.asset(
+          BgMusic.isMuted
+              ? "assets/images/button/no_sound.png"
+              : "assets/images/button/sound.png",
+          height: 40,
+        ),
+      ),
+
+      const SizedBox(width: 8),
+
+      // 👤 PROFILE (100% SAME AS BEFORE)
+      GestureDetector(
+        onTap: () {
+          TapSound.play();
+          Navigator.pushNamed(context, "/parentGate");
+        },
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Image.asset(
+              "assets/images/button/profile.png",
+              height: 72,
+            ),
+            ClipOval(
+              child: Image.asset(
+                avatarImage,
+                width: 54,
+                height: 54,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ],
+  ),
+),
+
+                // 🐸 FONI BREATHING
                 Positioned(
                   top: 170,
                   left: 0,
@@ -230,12 +260,15 @@ void didChangeDependencies() {
                           child: child,
                         );
                       },
-                      child: Image.asset("assets/images/home/foni.png", width: w * 0.58),
+                      child: Image.asset(
+                        "assets/images/home/foni.png",
+                        width: w * 0.58,
+                      ),
                     ),
                   ),
                 ),
 
-                // TITLE slide
+                // 🏷️ TITLE
                 Positioned(
                   top: 80,
                   left: 0,
@@ -251,7 +284,7 @@ void didChangeDependencies() {
                   ),
                 ),
 
-                // MENU BUTTONS
+                // 🎮 MENU BUTTONS
                 Positioned(
                   bottom: 130,
                   left: 0,
@@ -314,7 +347,7 @@ void didChangeDependencies() {
   }
 }
 
-// 🌟 MENU BUTTON CLASS (unchanged)
+// 🔘 MENU BUTTON (UNCHANGED)
 class MenuButton extends StatefulWidget {
   final Color color;
   final Color shadow;
@@ -399,8 +432,16 @@ class _MenuButtonState extends State<MenuButton>
             color: widget.color,
             borderRadius: BorderRadius.circular(26),
             boxShadow: [
-              BoxShadow(color: widget.shadow, offset: const Offset(-4, -4), blurRadius: 6),
-              BoxShadow(color: widget.shadow.withOpacity(0.5), offset: const Offset(6, 6), blurRadius: 12),
+              BoxShadow(
+                color: widget.shadow,
+                offset: const Offset(-4, -4),
+                blurRadius: 6,
+              ),
+              BoxShadow(
+                color: widget.shadow.withOpacity(0.5),
+                offset: const Offset(6, 6),
+                blurRadius: 12,
+              ),
             ],
           ),
           child: Column(

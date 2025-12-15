@@ -25,77 +25,53 @@ class AbjadHomePage extends StatelessWidget {
           SafeArea(
             child: Column(
               children: [
-                // 🔝 TOP BAR
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: Row(
-                    children: [
-                      // ⬅ Back
-                      GestureDetector(
-                        onTap: () {
-                          TapSound.play();
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          width: 46,
-                          height: 46,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(18),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Colors.black26,
-                                offset: Offset(2, 3),
-                                blurRadius: 6,
-                              ),
-                            ],
-                          ),
-                          child: const Icon(Icons.arrow_back, color: Colors.brown),
-                        ),
-                      ),
+                // 🔝 TOP BAR (MATCH HOME STYLE)
+Padding(
+  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+  child: Row(
+    children: [
 
-                      const Spacer(),
+      // ⬅️ BACK BUTTON (IMAGE)
+      GestureDetector(
+        onTap: () {
+          TapSound.play();
+          Navigator.pop(context);
+        },
+        child: Image.asset(
+          "assets/images/button/return.png",
+          height: 46,
+        ),
+      ),
 
-                      // ⭐ Star counter
-                      Container(
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [
-                              Color(0xFFFFE37A),
-                              Color(0xFFFFC27A),
-                            ],
-                          ),
-                          borderRadius: BorderRadius.circular(26),
-                        ),
-                        padding: const EdgeInsets.all(3),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFFF5D7),
-                            borderRadius: BorderRadius.circular(22),
-                          ),
-                          child: Row(
-                            children: [
-                              Image.asset(
-                                "assets/images/home/star.png",
-                                height: 24,
-                              ),
-                              const SizedBox(width: 6),
-                              Text(
-                                "$stars",
-                                style: GoogleFonts.baloo2(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.brown,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+      const Spacer(),
+
+      // ⭐ STAR CONTAINER (SAME AS HOME, BUT RIGHT)
+      Stack(
+        alignment: Alignment.centerLeft,
+        children: [
+          Image.asset(
+            "assets/images/button/star_container.png",
+            height: 56,
+          ),
+
+          Positioned(
+            right: 43,
+            top: 8,
+            child: Text(
+              "$stars",
+              style: GoogleFonts.baloo2(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+          ),
+        ],
+      ),
+    ],
+  ),
+),
+
 
                 const SizedBox(height: 12),
 

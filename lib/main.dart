@@ -26,7 +26,7 @@ import 'modules/permainan/gamehome.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await TapSound.preload(); 
+  await TapSound.preload();
   await Hive.initFlutter();
 
   // Create and open all boxes
