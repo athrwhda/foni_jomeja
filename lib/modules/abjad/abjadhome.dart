@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+//import 'package:foni_jomeja/debug/draw_test_page.dart';
 import 'package:foni_jomeja/modules/abjad/letter/introduce_letter_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
@@ -46,6 +47,7 @@ class AbjadHomePage extends StatelessWidget {
     TapSound.play();
     Navigator.pushAndRemoveUntil(
       context,
+      //MaterialPageRoute(builder: (_) => const DrawTestPage()),
       MaterialPageRoute(builder: (_) => const HomePage()),
       (route) => false,
     );

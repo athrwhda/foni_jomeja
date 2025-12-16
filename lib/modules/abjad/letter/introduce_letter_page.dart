@@ -133,7 +133,7 @@ class IntroduceLetterPage extends StatelessWidget {
                           builder: (_) => TraceUppercasePage(
                             letter: letter,
                             stage: 1,
-                            expectedStrokes: 3, // Placeholder value
+                             // Placeholder value
                           ),
                         ),
                       );
