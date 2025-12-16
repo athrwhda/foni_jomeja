@@ -4,6 +4,9 @@ import 'package:hive/hive.dart';
 import 'package:foni_jomeja/core/audio/tap_sound.dart';
 import 'package:foni_jomeja/core/rewards/success_dialog.dart';
 import 'package:foni_jomeja/core/rewards/star_overlay.dart';
+import 'package:foni_jomeja/modules/abjad/abjadhome.dart';
+import 'package:foni_jomeja/home/home_page.dart';
+import 'package:foni_jomeja/modules/abjad/letter/introduce_letter_page.dart';
 
 class TraceLowercasePage extends StatefulWidget {
   final String letter;
@@ -46,17 +49,22 @@ class _TraceLowercasePageState extends State<TraceLowercasePage> {
               children: [
                 // 🔝 TOP BAR
                 Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: Row(
                     children: [
                       GestureDetector(
                         onTap: () {
                           TapSound.play();
-                          Navigator.pop(context);
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const HomePage(),
+                            ),
+                            (route) => false,
+                          );
                         },
                         child: Image.asset(
-                          "assets/images/button/return.png",
+                          "assets/images/button/home.png",
                           height: 46,
                         ),
                       ),
@@ -138,25 +146,33 @@ class _TraceLowercasePageState extends State<TraceLowercasePage> {
                           Future.delayed(const Duration(milliseconds: 600), () {
                             if (!mounted) return;
 
-                            // ⭐ ADD STAR
+                            // ⭐ ADD STAR (always allowed)
                             final scoreBox = Hive.box('scores');
                             scoreBox.put(
                               'stars',
                               scoreBox.get('stars', defaultValue: 0) + 1,
                             );
 
-                            // 🔓 UNLOCK NEXT LETTER (A → B)
+                            // 🔓 CORRECT UNLOCK LOGIC
                             final progressBox = Hive.box('progress');
-                            final currentIndex = progressBox.get(
+                            final int unlockedIndex = progressBox.get(
                               'abjad_unlocked_index',
                               defaultValue: 0,
                             );
-                            progressBox.put(
-                              'abjad_unlocked_index',
-                              currentIndex + 1,
-                            );
 
-                            // ⭐ SHOW ALIVE STAR OVERLAY
+                            final int letterIndex =
+                                widget.letter.codeUnitAt(0) -
+                                'A'.codeUnitAt(0);
+
+                            // ONLY unlock if this is the highest unlocked letter
+                            if (letterIndex == unlockedIndex) {
+                              progressBox.put(
+                                'abjad_unlocked_index',
+                                unlockedIndex + 1,
+                              );
+                            }
+
+                            // ⭐ STAR OVERLAY (alive star)
                             final overlay = Overlay.of(context);
                             final starOverlay = createStarOverlay(context);
                             overlay.insert(starOverlay);
@@ -168,22 +184,33 @@ class _TraceLowercasePageState extends State<TraceLowercasePage> {
                               builder: (_) => SuccessDialog(
                                 onAgain: () {
                                   starOverlay.remove();
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
+                                  Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => IntroduceLetterPage(
+                                        letter: widget.letter,
+                                      ),
+                                    ),
+                                    (route) => false,
+                                  );
                                 },
                                 onNext: () {
                                   starOverlay.remove();
-                                  Navigator.pushNamedAndRemoveUntil(
+                                  Navigator.pushAndRemoveUntil(
                                     context,
-                                    '/',
+                                    MaterialPageRoute(
+                                      builder: (_) => const AbjadHomePage(),
+                                    ),
                                     (route) => false,
                                   );
                                 },
                                 onHome: () {
                                   starOverlay.remove();
-                                  Navigator.pushNamedAndRemoveUntil(
+                                  Navigator.pushAndRemoveUntil(
                                     context,
-                                    '/',
+                                    MaterialPageRoute(
+                                      builder: (_) => const HomePage(),
+                                    ),
                                     (route) => false,
                                   );
                                 },

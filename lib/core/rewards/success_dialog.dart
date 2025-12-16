@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hive/hive.dart';
 import 'package:foni_jomeja/core/audio/tap_sound.dart';
 
-class SuccessDialog extends StatefulWidget {
+class SuccessDialog extends StatelessWidget {
   final int rewardStars;
   final VoidCallback onAgain;
   final VoidCallback onNext;
@@ -16,30 +15,6 @@ class SuccessDialog extends StatefulWidget {
     required this.onNext,
     required this.onHome,
   });
-
-  @override
-  State<SuccessDialog> createState() => _SuccessDialogState();
-}
-
-class _SuccessDialogState extends State<SuccessDialog> {
-  late int _newStars;
-  bool _rewardGiven = false;
-
-  @override
-  void initState() {
-    super.initState();
-
-    final box = Hive.box('scores');
-    final currentStars = box.get('stars', defaultValue: 0);
-
-    _newStars = currentStars + widget.rewardStars;
-
-    // ⭐ IMPORTANT: add star ONLY ONCE
-    if (!_rewardGiven) {
-      box.put('stars', _newStars);
-      _rewardGiven = true;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +63,7 @@ class _SuccessDialogState extends State<SuccessDialog> {
 
                 const SizedBox(height: 16),
 
-                // ⭐ REWARD ROW
+                // ⭐ VISUAL REWARD ONLY
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -98,7 +73,7 @@ class _SuccessDialogState extends State<SuccessDialog> {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      "+${widget.rewardStars}",
+                      "+$rewardStars",
                       style: GoogleFonts.baloo2(
                         fontSize: 26,
                         fontWeight: FontWeight.bold,
@@ -114,16 +89,16 @@ class _SuccessDialogState extends State<SuccessDialog> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _actionButton("Ulang", widget.onAgain),
-                    _actionButton("Seterusnya", widget.onNext),
-                    _actionButton("Home", widget.onHome),
+                    _actionButton("Ulang", onAgain),
+                    _actionButton("Seterusnya", onNext),
+                    _actionButton("Home", onHome),
                   ],
                 ),
               ],
             ),
           ),
 
-          // ❌ CLOSE BUTTON
+          // ❌ CLOSE BUTTON (dismiss dialog only)
           Positioned(
             right: -6,
             top: -6,

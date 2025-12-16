@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:foni_jomeja/core/audio/tap_sound.dart';
 import 'package:hive/hive.dart';
 import 'trace_uppercase_page.dart';
+import 'package:foni_jomeja/home/home_page.dart';
 
 
 
@@ -40,14 +41,20 @@ class IntroduceLetterPage extends StatelessWidget {
                       // ⬅️ BACK
                       GestureDetector(
                         onTap: () {
-                          TapSound.play();
-                          Navigator.pop(context);
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const HomePage(),
+                            ),
+                            (route) => false,
+                          );
                         },
                         child: Image.asset(
-                          "assets/images/button/return.png",
+                          "assets/images/button/home.png",
                           height: 46,
                         ),
                       ),
+
                       const Spacer(),
                       // ⭐ STAR CONTAINER
                       Stack(

@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:foni_jomeja/core/audio/tap_sound.dart';
 import 'trace_lowercase_page.dart';
+import 'package:foni_jomeja/home/home_page.dart';
 
 
 class TraceUppercasePage extends StatefulWidget {
@@ -52,10 +53,16 @@ class _TraceUppercasePageState extends State<TraceUppercasePage> {
                       GestureDetector(
                         onTap: () {
                           TapSound.play();
-                          Navigator.pop(context);
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const HomePage(),
+                            ), 
+                            (route) => false,
+                          );
                         },
                         child: Image.asset(
-                          "assets/images/button/return.png",
+                          "assets/images/button/home.png",
                           height: 46,
                         ),
                       ),
