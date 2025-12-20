@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:foni_jomeja/core/audio/tap_sound.dart';
-import 'package:foni_jomeja/home/home_page.dart';
+//import 'package:foni_jomeja/home/home_page.dart';
 import 'package:foni_jomeja/modules/abjad/letter/trace_lowercase_page.dart';
+import 'package:foni_jomeja/modules/abjad/abjadhome.dart';
 
 enum TracePhase { intro, tracing, complete }
 
@@ -257,11 +258,11 @@ class _TraceUppercasePageState extends State<TraceUppercasePage>
               TapSound.play();
               Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (_) => const HomePage()),
+                MaterialPageRoute(builder: (_) => const AbjadHomePage()),
                 (route) => false,
               );
             },
-            child: Image.asset("assets/images/button/home.png", height: 46),
+            child: Image.asset("assets/images/button/hamburger.png", height: 46),
           ),
           const Spacer(),
           Stack(

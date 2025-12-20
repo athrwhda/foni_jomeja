@@ -3,8 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:foni_jomeja/core/audio/tap_sound.dart';
 import 'package:hive/hive.dart';
 import 'trace_uppercase_page.dart';
-import 'package:foni_jomeja/home/home_page.dart';
-
+//import 'package:foni_jomeja/home/home_page.dart';
+import 'package:foni_jomeja/modules/abjad/abjadhome.dart';
 
 
 class IntroduceLetterPage extends StatelessWidget {
@@ -44,13 +44,13 @@ class IntroduceLetterPage extends StatelessWidget {
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                              builder: (_) => const HomePage(),
+                              builder: (_) => const AbjadHomePage(),
                             ),
                             (route) => false,
                           );
                         },
                         child: Image.asset(
-                          "assets/images/button/home.png",
+                          "assets/images/button/hamburger.png",
                           height: 46,
                         ),
                       ),

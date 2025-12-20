@@ -24,6 +24,9 @@ import 'modules/kenali_saya/kenalihome.dart';
 import 'modules/sukukata/sukuhome.dart';
 import 'modules/permainan/gamehome.dart';
 
+// Debug
+import 'package:foni_jomeja/debug/audio_test_page.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await TapSound.preload();
@@ -47,9 +50,12 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
 
       // First screen ALWAYS → splash1
-      initialRoute: '/splash1',
+      initialRoute: '/splash1', //debug
 
       routes: {
+        //Debug
+        '/debug' : (_) => AudioTestPage(),
+
         // Onboarding
         '/splash1': (_) => const Splash1(),
         '/splash2': (_) => const Splash2(),

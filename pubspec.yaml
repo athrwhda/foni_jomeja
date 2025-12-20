@@ -77,33 +77,38 @@ flutter:
     - assets/images/clayabjad/
     - assets/images/home/
     - assets/images/bg/
+    - assets/images/kenali/
+    - assets/images/ui/
     - assets/video/
     - assets/audio/
     - assets/audio/sound/
+    - assets/audio/audiohuruf/
+    - assets/audio/kenali/A/
+    - assets/audio/kenali/B/
+    - assets/audio/kenali/C/
+    - assets/audio/kenali/D/
+    - assets/audio/kenali/E/
+    - assets/audio/kenali/F/
+    - assets/audio/kenali/G/
+    - assets/audio/kenali/H/
+    - assets/audio/kenali/I/
+    - assets/audio/kenali/J/
+    - assets/audio/kenali/K/
+    - assets/audio/kenali/L/
+    - assets/audio/kenali/M/
+    - assets/audio/kenali/N/
+    - assets/audio/kenali/O/
+    - assets/audio/kenali/P/
+    - assets/audio/kenali/Q/
+    - assets/audio/kenali/R/
+    - assets/audio/kenali/S/
+    - assets/audio/kenali/T/
+    - assets/audio/kenali/U/
+    - assets/audio/kenali/V/
+    - assets/audio/kenali/W/
+    - assets/audio/kenali/X/
+    - assets/audio/kenali/Y/
+    - assets/audio/kenali/Z/
 
 
-  # An image asset can refer to one or more resolution-specific "variants", see
-  # https://flutter.dev/to/resolution-aware-images
-
-  # For details regarding adding assets from package dependencies, see
-  # https://flutter.dev/to/asset-from-package
-
-  # To add custom fonts to your application, add a fonts section here,
-  # in this "flutter" section. Each entry in this list should have a
-  # "family" key with the font family name, and a "fonts" key with a
-  # list giving the asset and other descriptors for the font. For
-  # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.dev/to/font-from-package
+ 

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:foni_jomeja/core/audio/tap_sound.dart';
+import 'package:audioplayers/audioplayers.dart';
 
-class SuccessDialog extends StatelessWidget {
+class SuccessDialog extends StatefulWidget {
   final int rewardStars;
   final VoidCallback onAgain;
   final VoidCallback onNext;
@@ -17,6 +18,31 @@ class SuccessDialog extends StatelessWidget {
   });
 
   @override
+  State<SuccessDialog> createState() => _SuccessDialogState();
+}
+
+class _SuccessDialogState extends State<SuccessDialog> {
+  final AudioPlayer _player = AudioPlayer();
+
+  @override
+  void initState() {
+    super.initState();
+    _playWinSound();
+  }
+
+  Future<void> _playWinSound() async {
+    await _player.play(
+      AssetSource('audio/win_chimes.wav'),
+    );
+  }
+
+  @override
+  void dispose() {
+    _player.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Dialog(
       backgroundColor: Colors.transparent,
@@ -24,10 +50,10 @@ class SuccessDialog extends StatelessWidget {
         clipBehavior: Clip.none,
         children: [
 
-          // 🧱 MAIN CARD
+          /// 🧱 MAIN CARD
           Container(
-            margin: const EdgeInsets.only(top: 30),
-            padding: const EdgeInsets.fromLTRB(20, 50, 20, 24),
+            margin: const EdgeInsets.only(top: 36),
+            padding: const EdgeInsets.fromLTRB(24, 56, 24, 28),
             decoration: BoxDecoration(
               color: const Color(0xFFFFF7E6),
               borderRadius: BorderRadius.circular(30),
@@ -51,7 +77,7 @@ class SuccessDialog extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 8),
+                const SizedBox(height: 6),
 
                 Text(
                   "Kamu berjaya 🎉",
@@ -61,21 +87,21 @@ class SuccessDialog extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 16),
+                const SizedBox(height: 18),
 
-                // ⭐ VISUAL REWARD ONLY
+                /// ⭐ STAR REWARD
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
                       "assets/images/home/star.png",
-                      height: 40,
+                      height: 42,
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 10),
                     Text(
-                      "+$rewardStars",
+                      "+${widget.rewardStars}",
                       style: GoogleFonts.baloo2(
-                        fontSize: 26,
+                        fontSize: 28,
                         fontWeight: FontWeight.bold,
                         color: const Color(0xFF6B3A00),
                       ),
@@ -83,34 +109,42 @@ class SuccessDialog extends StatelessWidget {
                   ],
                 ),
 
-                const SizedBox(height: 24),
+                const SizedBox(height: 28),
 
-                // 🔘 ACTION BUTTONS
+                /// 🔘 ACTION BUTTONS (PNG)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _actionButton("Ulang", onAgain),
-                    _actionButton("Seterusnya", onNext),
-                    _actionButton("Home", onHome),
+                    _iconButton(
+                      asset: "assets/images/button/return.png",
+                      onTap: widget.onAgain,
+                    ),
+                    _iconButton(
+                      asset: "assets/images/button/seterusnya.png",
+                      onTap: widget.onNext,
+                    ),
+                    _iconButton(
+                      asset: "assets/images/button/home.png",
+                      onTap: widget.onHome,
+                    ),
                   ],
                 ),
               ],
             ),
           ),
 
-          // ❌ CLOSE BUTTON (dismiss dialog only)
+          /// ❌ CLOSE BUTTON
           Positioned(
-            right: -6,
-            top: -6,
+            top: 0,
+            right: 0,
             child: GestureDetector(
               onTap: () {
                 TapSound.play();
                 Navigator.pop(context);
               },
-              child: const CircleAvatar(
-                radius: 18,
-                backgroundColor: Colors.redAccent,
-                child: Icon(Icons.close, color: Colors.white),
+              child: Image.asset(
+                "assets/images/button/close.png",
+                height: 42,
               ),
             ),
           ),
@@ -119,27 +153,17 @@ class SuccessDialog extends StatelessWidget {
     );
   }
 
-  Widget _actionButton(String text, VoidCallback onTap) {
+  /// 🔘 ICON BUTTON HELPER
+  Widget _iconButton({
+    required String asset,
+    required VoidCallback onTap,
+  }) {
     return GestureDetector(
       onTap: () {
         TapSound.play();
         onTap();
       },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-        decoration: BoxDecoration(
-          color: const Color(0xFFBFECAC),
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Text(
-          text,
-          style: GoogleFonts.baloo2(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: const Color(0xFF6B3A00),
-          ),
-        ),
-      ),
+      child: Image.asset(asset, height: 54),
     );
   }
 }
