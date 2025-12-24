@@ -200,6 +200,29 @@ final List<KenaliLetterData> kenaliLetters = [
     highlightCount: 2,
   ),
 
+  /// H
+  KenaliLetterData(
+    letter: 'H',
+    syllable1: 'HU',
+    syllable2: 'TAN',
+    word: 'HUTAN',
+
+    imagePath: 'assets/images/kenali/H.png',
+
+    // Audio (corrected structure)
+    introAudio: 'assets/audio/kenali/H/intro.mp3',
+    part1Audio: 'assets/audio/kenali/H/part1.mp3',
+    part2Audio: 'assets/audio/kenali/H/part2.mp3',
+    wordAudio: 'assets/audio/kenali/H/word.mp3',
+
+    // Drag letters
+    correctLetters: ['H', 'U', 'T', 'A', 'N'],
+    // Extra letters for confuse page (Screen 2)
+    confuseLetters: ['H', 'U', 'T', 'A', 'N', 'U', 'G', 'F', 'I', 'M', 'A'],
+
+    highlightCount: 2,
+  ),
+
   /// I
   KenaliLetterData(
     letter: 'I',

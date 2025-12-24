@@ -172,7 +172,7 @@ BgMusic.start();
 
                       // STAR COUNT
                       Positioned(
-                        right: 43,
+                        right: 36,
                         top: 8,
                         child: Text(
                           "$stars",

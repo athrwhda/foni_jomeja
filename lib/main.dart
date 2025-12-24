@@ -26,6 +26,7 @@ import 'modules/permainan/gamehome.dart';
 
 // Debug
 import 'package:foni_jomeja/debug/audio_test_page.dart';
+import 'package:foni_jomeja/debug/audiotest_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,6 +56,7 @@ class MyApp extends StatelessWidget {
       routes: {
         //Debug
         '/debug' : (_) => AudioTestPage(),
+        '/debug1' : (_) => AudioTestPage2(),
 
         // Onboarding
         '/splash1': (_) => const Splash1(),
