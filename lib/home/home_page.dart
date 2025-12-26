@@ -5,7 +5,6 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:foni_jomeja/core/audio/tap_sound.dart';
 import 'package:foni_jomeja/core/audio/bg_music.dart';
 
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -31,33 +30,31 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-    BgMusic.start();
-  });
+      BgMusic.start();
+    });
 
     Future.delayed(const Duration(milliseconds: 300), () async {
-await _voicePlayer.setPlayerMode(PlayerMode.lowLatency);
-await _voicePlayer.setReleaseMode(ReleaseMode.stop);
-await _voicePlayer.setVolume(1.0);
-await _voicePlayer.play(
-AssetSource("audio/A.mp3"),
-mode: PlayerMode.lowLatency,
-);
-BgMusic.start();
-});
-    
+      await _voicePlayer.setPlayerMode(PlayerMode.lowLatency);
+      await _voicePlayer.setReleaseMode(ReleaseMode.stop);
+      await _voicePlayer.setVolume(1.0);
+      await _voicePlayer.play(
+        AssetSource("audio/A.mp3"),
+        mode: PlayerMode.lowLatency,
+      );
+      BgMusic.start();
+    });
+
     _titleController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 700),
     );
 
-    _titleSlide = Tween<Offset>(
-      begin: const Offset(0, -0.6),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(parent: _titleController, curve: Curves.easeOutBack),
-    );
+    _titleSlide = Tween<Offset>(begin: const Offset(0, -0.6), end: Offset.zero)
+        .animate(
+          CurvedAnimation(parent: _titleController, curve: Curves.easeOutBack),
+        );
 
     _titleController.forward();
 
@@ -123,10 +120,7 @@ BgMusic.start();
       builder: (_, child) {
         return Opacity(
           opacity: _btnOpacity[index].value,
-          child: Transform.scale(
-            scale: _btnScale[index].value,
-            child: child,
-          ),
+          child: Transform.scale(scale: _btnScale[index].value, child: child),
         );
       },
       child: button,
@@ -137,8 +131,7 @@ BgMusic.start();
   Widget build(BuildContext context) {
     final w = MediaQuery.of(context).size.width;
 
-    String avatarName =
-        Hive.box('child').get("avatar", defaultValue: "char1");
+    String avatarName = Hive.box('child').get("avatar", defaultValue: "char1");
     int stars = Hive.box('scores').get("stars", defaultValue: 0);
 
     String avatarImage = "assets/images/charbody/$avatarName.png";
@@ -148,105 +141,95 @@ BgMusic.start();
       body: Stack(
         children: [
           Positioned.fill(
-            child: Image.asset(
-              "assets/images/bg/bg3.png",
-              fit: BoxFit.cover,
-            ),
+            child: Image.asset("assets/images/bg/bg3.png", fit: BoxFit.cover),
           ),
 
           SafeArea(
             child: Stack(
               children: [
-
-                // ⭐ STAR CONTAINER (IMAGE)
+                // ⭐ STAR + 🎵 MUSIC (NO OVERLAP)
                 Positioned(
                   top: 10,
                   left: 16,
-                  child: Stack(
-                    alignment: Alignment.centerLeft,
+                  child: Row(
                     children: [
-                      Image.asset(
-                        "assets/images/button/star_container.png",
-                        height: 56,
+                      // ⭐ STAR CONTAINER
+                      Stack(
+                        alignment: Alignment.centerLeft,
+                        children: [
+                          Image.asset(
+                            "assets/images/button/star_container.png",
+                            height: 56,
+                          ),
+                          Positioned(
+                            right: 36,
+                            top: 8,
+                            child: Text(
+                              "$stars",
+                              style: GoogleFonts.baloo2(
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
 
-                      // STAR COUNT
-                      Positioned(
-                        right: 36,
-                        top: 8,
-                        child: Text(
-                          "$stars",
-                          style: GoogleFonts.baloo2(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
+                      const SizedBox(width: 8),
+
+                      // 🎵 MUSIC BUTTON
+                      GestureDetector(
+                        onTap: () async {
+                          TapSound.play();
+                          if (BgMusic.isMuted) {
+                            await BgMusic.unmute();
+                          } else {
+                            await BgMusic.mute();
+                          }
+                          setState(() {});
+                        },
+                        child: Image.asset(
+                          BgMusic.isMuted
+                              ? "assets/images/button/no_music.png"
+                              : "assets/images/button/music.png",
+                          height: 40,
                         ),
                       ),
                     ],
                   ),
                 ),
 
-                // 🔊 SOUND BUTTON + 👤 PROFILE (profile unchanged)
-Positioned(
-  top: 6,
-  right: 16,
-  child: Row(
-    mainAxisSize: MainAxisSize.min,
-    children: [
+                // 👤 PROFILE (UNCHANGED)
+                Positioned(
+                  top: 6,
+                  right: 16,
+                  child: GestureDetector(
+                    onTap: () {
+                      TapSound.play();
+                      Navigator.pushNamed(context, "/parentGate");
+                    },
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Image.asset(
+                          "assets/images/button/profile.png",
+                          height: 72,
+                        ),
+                        ClipOval(
+                          child: Image.asset(
+                            avatarImage,
+                            width: 54,
+                            height: 54,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
 
-      // 🔊 SOUND TOGGLE
-      GestureDetector(
-        onTap: () async {
-          TapSound.play();
-
-          if (BgMusic.isMuted) {
-            await BgMusic.unmute();
-          } else {
-            await BgMusic.mute();
-          }
-
-          setState(() {});
-        },
-        child: Image.asset(
-          BgMusic.isMuted
-              ? "assets/images/button/no_sound.png"
-              : "assets/images/button/sound.png",
-          height: 40,
-        ),
-      ),
-
-      const SizedBox(width: 8),
-
-      // 👤 PROFILE (100% SAME AS BEFORE)
-      GestureDetector(
-        onTap: () {
-          TapSound.play();
-          Navigator.pushNamed(context, "/parentGate");
-        },
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Image.asset(
-              "assets/images/button/profile.png",
-              height: 72,
-            ),
-            ClipOval(
-              child: Image.asset(
-                avatarImage,
-                width: 54,
-                height: 54,
-                fit: BoxFit.cover,
-              ),
-            ),
-          ],
-        ),
-      ),
-    ],
-  ),
-),
-
-                // 🐸 FONI BREATHING
+                // 🐸 FONI
                 Positioned(
                   top: 170,
                   left: 0,
@@ -368,8 +351,7 @@ class MenuButton extends StatefulWidget {
   State<MenuButton> createState() => _MenuButtonState();
 }
 
-class _MenuButtonState extends State<MenuButton>
-    with TickerProviderStateMixin {
+class _MenuButtonState extends State<MenuButton> with TickerProviderStateMixin {
   late AnimationController _tapController;
   late Animation<double> _scaleAnim;
   late Animation<double> _wiggleAnim;
@@ -387,9 +369,10 @@ class _MenuButtonState extends State<MenuButton>
       CurvedAnimation(parent: _tapController, curve: Curves.easeOutBack),
     );
 
-    _wiggleAnim = Tween<double>(begin: -4, end: 4).animate(
-      CurvedAnimation(parent: _tapController, curve: Curves.easeInOut),
-    );
+    _wiggleAnim = Tween<double>(
+      begin: -4,
+      end: 4,
+    ).animate(CurvedAnimation(parent: _tapController, curve: Curves.easeInOut));
   }
 
   @override
