@@ -80,6 +80,7 @@ flutter:
     - assets/images/bg/
     - assets/images/kenali/
     - assets/images/ui/
+    - assets/images/logo/
     - assets/video/
     - assets/audio/
     - assets/audio/sound/
